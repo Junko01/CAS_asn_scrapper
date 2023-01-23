@@ -1,0 +1,33 @@
+#!/bin/bash
+
+echo ""
+echo "    [+]------------------------------------------[+]"
+echo "    [+] Countries Asn Scrapper By Junko Enoshima [+]"
+echo "    [+]------------------------------------------[+]"
+echo ""
+
+if [ $# != 1 ]; then
+        echo "[+]--------------------------------------------[+]"
+        echo "[+] Folosim: $0 <country>"
+        #echo ""
+        echo "[+]--------------------------------------------[+]"
+        #echo ""
+        echo "[+] Exemple: $0 ro"
+        echo "[+]--------------------------------------------[+]"
+        echo ""
+        exit;
+fi
+
+echo "[+] Incepem..."
+curl --silent https://ipinfo.io/countries/$1 > $1
+echo "[+] Am descarcat ASN-urile de pe ipinfo !"
+echo "[+] Incepe Magia..."
+cat $1 |grep '<td class="p-3"><a href' > .cache.$1
+sed -i 's/">/"> /g' .cache.$1
+sed -i 's/</ </g' .cache.$1
+cat .cache.$1 |awk '{print $5}' > asn.$1
+sleep 1
+rm -rf .cache.$1 $1
+echo "[+] cat" asn.$1 "pentru a vedea Asn-urile."
+
+
